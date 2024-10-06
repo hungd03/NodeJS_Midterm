@@ -21,7 +21,7 @@ router.post('/', verifyToken, async (req, res) => {
             description,
             url: url.startsWith("https://") ? url : `https://${url} `,
             status: status || "TO LEARN",
-            user: "67024aae63261db40e08e8c4",
+            user: req.userId,
         });
         await newCourse.save();
 
