@@ -2,12 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+const authRouter = require('./routes/Auth');
+
 const port = process.env.PORT || 5000;
 
 const app = express();
+app.use(express.json());
 
-app.get("/", (req, res) => res.end("Hello World"));
-
+app.use("/api/auth", authRouter);
 
 const connectDB = async () => {
     try {
