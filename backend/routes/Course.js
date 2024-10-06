@@ -43,6 +43,38 @@ router.post('/', verifyToken, async (req, res) => {
         console.log(error.message);
         res.status(500).json({ success: false, message: "Internal server error" });
     }
-})
+});
+
+
+// @route POST api/courses
+// @desc Create course
+// @access private
+router.put('/:id', verifyToken, async (req, res) => {
+    
+    const { tilte, description, url, status } = req.body;
+
+    try {
+        let updatedCourse = {
+            tilte,
+            description: description || '',
+            url: (url.startsWith('https://') ? url : `https://${url}`) || '',
+            status: status || 'TO LEARN'
+        }
+
+        const courseUpdateCondition = { _id: req.params.id, user: req.userId };
+
+        updatedCourse = await Course.findOneAndUpdate(courseUpdateCondition, updatedCourse, {new: true});
+
+        // User not authorised to update course or course not found
+        if (!updatedCourse)
+            return res.status(401).json({ success: false, message: "Course not found or user not authorised" });
+
+        res.json({ success: true, message: "Update course successfully", course: updatedCourse });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+
+});
 
 module.exports = router;
