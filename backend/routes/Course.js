@@ -4,6 +4,19 @@ const verifyToken = require('../middlewares/Auth');
 
 const Course = require('../models/Course');
 
+// @route GET api/courses
+// @desc Get courses
+// @access private
+router.get('/', verifyToken, async (req, res) => {
+    try {
+        const courses = await Course.find({user: req.userId}).populate('user', ['username']);
+        res.json({ sucess: true, courses });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
+
 // @route POST api/courses
 // @desc Create course
 // @access private
