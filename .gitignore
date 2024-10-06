@@ -1,0 +1,52 @@
+# Bỏ qua thư mục node_modules cho cả frontend và backend
+node_modules/
+
+# Bỏ qua file log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Bỏ qua các file môi trường
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Bỏ qua thư mục build cho frontend (React)
+build/
+
+# Bỏ qua thư mục coverage (nếu bạn dùng công cụ kiểm tra code coverage)
+coverage/
+
+# Bỏ qua các tệp dựng sẵn cho Docker (nếu dùng Docker)
+docker-compose.override.yml
+
+# Bỏ qua thư mục cache tạm thời
+.cache/
+.temp/
+
+# Bỏ qua output của lệnh build trong React
+/dist/
+
+# Bỏ qua thư mục test coverage nếu dùng Jest
+/coverage/
+
+# Bỏ qua thư mục npm hoặc yarn cache (nếu có)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Bỏ qua .DS_Store (trên macOS)
+.DS_Store
+
+# Bỏ qua file package-lock.json và yarn.lock nếu không cần khóa phiên bản chính xác
+package-lock.json
+yarn.lock
+
+# Bỏ qua các tệp phục vụ IDE như VSCode
+.vscode/
+
+# Bỏ qua các tệp khác liên quan đến hệ điều hành hoặc công cụ cụ thể
+Thumbs.db
