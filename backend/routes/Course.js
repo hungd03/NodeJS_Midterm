@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const verifyToken = require('../middlewares/Auth');
 
 const Course = require('../models/Course');
 
 // @route POST api/courses
 // @desc Create course
 // @access private
-router.post('/', async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
    
     const { tilte, description, url, status } = req.body;
 
