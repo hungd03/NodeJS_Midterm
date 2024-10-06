@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
             status: status || "TO LEARN",
             user: "67024aae63261db40e08e8c4",
         });
-        await newPost.save();
+        await newCourse.save();
 
         res.json({ success: true, message: "Add course successfully", course: newCourse });
     } catch (error) {
