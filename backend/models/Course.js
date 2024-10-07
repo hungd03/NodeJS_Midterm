@@ -20,6 +20,6 @@ const CourseSchema = new Schema ({
         type: Schema.Types.ObjectId,
         ref: 'users'
     }
-});
+}, {timestamp: true});
 
 module.exports = mongoose.model('courses', CourseSchema);
