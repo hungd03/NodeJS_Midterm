@@ -45,9 +45,8 @@ router.post('/', verifyToken, async (req, res) => {
     }
 });
 
-
-// @route POST api/courses
-// @desc Create course
+// @route PUT api/courses
+// @desc Update course
 // @access private
 router.put('/:id', verifyToken, async (req, res) => {
     
@@ -56,7 +55,7 @@ router.put('/:id', verifyToken, async (req, res) => {
     try {
         let updatedCourse = {
             tilte,
-            description: description || '',
+            description,
             url: (url.startsWith('https://') ? url : `https://${url}`) || '',
             status: status || 'TO LEARN'
         }
@@ -70,6 +69,30 @@ router.put('/:id', verifyToken, async (req, res) => {
             return res.status(401).json({ success: false, message: "Course not found or user not authorised" });
 
         res.json({ success: true, message: "Update course successfully", course: updatedCourse });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+
+});
+
+// @route DELETE api/courses
+// @desc Delete course
+// @access private
+router.delete('/:id', verifyToken, async (req, res) => {
+
+    try {
+
+        const courseDeleteCondition = { _id: req.params.id, user: req.userId };
+        const deletedCourse = await Course.findByIdAndDelete(courseDeleteCondition);
+
+        
+        // User not authorised to delete or course not found
+        if (!deletedCourse) 
+            return res.status(401).json({ success: false, message: "Course not found or user not authorised" });
+
+        res.json({ success: true, message: "Delete course successfully", course: deletedCourse });
+
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ success: false, message: "Internal server error" });
