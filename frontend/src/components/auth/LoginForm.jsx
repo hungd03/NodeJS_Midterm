@@ -1,16 +1,13 @@
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import AlertMessage from "../layout/AlertMessage";
 
 const LoginForm = () => {
-  
   // Context
-  const {loginUser} = useContext(AuthContext);
-  
-  // Router
-  const navigate = useNavigate();
+  const { loginUser } = useContext(AuthContext);
 
   // Local State
   const [loginForm, setLoginForm] = useState({
@@ -18,20 +15,23 @@ const LoginForm = () => {
     password: "",
   });
 
-  const {username, password} = loginForm;
+  const [alert, setAlert] = useState(null);
+
+  const { username, password } = loginForm;
 
   const onChangeLoginForm = (event) =>
     setLoginForm({ ...loginForm, [event.target.name]: event.target.value });
 
-  const login = async event => {
+  const login = async (event) => {
     event.preventDefault();
 
     try {
       const loginData = await loginUser(loginForm);
-      if(loginData.success) {
-        navigate("/dashboard");
+      if (loginData.success) {
+        //navigate("/dashboard");
       } else {
-
+        setAlert({ type: "danger", message: loginData.message });
+        setTimeout(() => setAlert(null), 2000);
       }
     } catch (error) {
       console.log(error);
@@ -65,6 +65,7 @@ const LoginForm = () => {
             required
           />
         </Form.Group>
+        <AlertMessage info={alert} />
         <Button variant="success" type="submit">
           Login
         </Button>
