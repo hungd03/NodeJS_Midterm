@@ -71,8 +71,32 @@ const AuthContextProvider = ({ children }) => {
     }
   };
 
+  // Register
+  const registerUser = async (userForm) => {
+    try {
+      const res = await axios.post(`${apiUrl}/auth/register`, userForm);
+
+      if (res.data.success) {
+        localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, res.data.accessToken);
+        setAuthToken(res.data.accessToken);
+        dispatch({
+          type: "SET_AUTH",
+          payload: { isAuthenticated: true, user: res.data.user },
+        });
+
+        return res.data;
+      }
+    } catch (error) {
+      if (error.response.data) {
+        return error.response.data;
+      } else {
+        return { success: false, message: "An unexpected error occurred" };
+      }
+    }
+  };
+
   // Context data
-  const authContextData = { loginUser, authState };
+  const authContextData = { loginUser, registerUser, authState };
 
   // Return provider
   return (
