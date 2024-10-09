@@ -2,6 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import Spinner from "react-bootstrap/Spinner";
+import NavbarMenu from "../layout/NavbarMenu";
 
 const ProtectedRoute = () => {
   const {
@@ -17,8 +18,15 @@ const ProtectedRoute = () => {
     );
   }
 
-  // Nếu đã xác thực, hiển thị component yêu cầu (Outlet tương đương với children route)
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  // Nếu đã xác thực, hiển thị NavbarMenu và component yêu cầu (Outlet tương đương với route con)
+  return isAuthenticated ? (
+    <>
+      <NavbarMenu />
+      <Outlet />
+    </>
+  ) : (
+    <Navigate to="/login" />
+  );
 };
 
 export default ProtectedRoute;
