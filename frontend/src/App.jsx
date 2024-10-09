@@ -4,6 +4,7 @@ import Landing from "./components/layout/Landing";
 import Auth from "./views/Auth";
 import AuthContextProvider from "./contexts/AuthContext";
 import Dashboard from "./views/Dashboard";
+import About from "./views/About";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
 
 function App() {
@@ -20,6 +21,9 @@ function App() {
           />
           <Route path="/dashboard" element={<ProtectedRoute />}>
             <Route path="" element={<Dashboard />} />
+          </Route>
+          <Route path="/about" element={<ProtectedRoute />}>
+            <Route path="" element={<About />} />
           </Route>
         </Routes>
       </Router>
