@@ -42,7 +42,7 @@ yarn-error.log*
 .DS_Store
 
 # Bỏ qua file package-lock.json và yarn.lock nếu không cần khóa phiên bản chính xác
-package-lock.json
+
 yarn.lock
 
 # Bỏ qua các tệp phục vụ IDE như VSCode
