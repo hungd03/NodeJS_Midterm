@@ -1,16 +1,22 @@
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import { Link } from "react-router-dom"; // Chỉnh sửa: Sử dụng đúng Link từ react-router-dom
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import logoutIcon from "../../assets/logout.svg";
 import Button from "react-bootstrap/Button";
+import { AuthContext } from "../../contexts/AuthContext";
+import { useContext } from "react";
 
 const NavbarMenu = () => {
+  const { logoutUser } = useContext(AuthContext);
+
+  const logout = async () => await logoutUser();
+
   return (
     <Navbar expand="lg" bg="primary" variant="dark" className="shadow">
       <Navbar.Brand className="fw-bold text-white">
         <img src={logo} alt="logo" width="32" height="32" className="ms-2" />
-        <span className="ms-2">LearnIt</span>
+        <span className="ms-2">Courses</span>
       </Navbar.Brand>
 
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -26,9 +32,6 @@ const NavbarMenu = () => {
         </Nav>
 
         <Nav>
-          <Nav.Link className="fw-bold text-white" disabled>
-            Welcome User
-          </Nav.Link>
           <Button variant="secondary" className="fw-bold text-white me-3">
             <img
               src={logoutIcon}
@@ -36,6 +39,7 @@ const NavbarMenu = () => {
               width="32"
               height="32"
               className="me-auto"
+              onClick={logout}
             />
             <span className="ms-2">Logout</span>
           </Button>
