@@ -1,103 +1,120 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const verifyToken = require('../middlewares/Auth');
+const verifyToken = require("../middlewares/Auth");
 
-const Course = require('../models/Course');
+const Course = require("../models/Course");
 
 // @route GET api/courses
 // @desc Get courses
 // @access private
-router.get('/', verifyToken, async (req, res) => {
-    try {
-        const courses = await Course.find({user: req.userId}).populate('user', ['username']);
-        res.json({ sucess: true, courses });
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ success: false, message: "Internal server error" });
-    }
+router.get("/", verifyToken, async (req, res) => {
+  try {
+    const courses = await Course.find({ user: req.userId }).populate("user", [
+      "username",
+    ]);
+    res.json({ success: true, courses });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 });
 
 // @route POST api/courses
 // @desc Create course
 // @access private
-router.post('/', verifyToken, async (req, res) => {
-   
-    const { tilte, description, url, status } = req.body;
+router.post("/", verifyToken, async (req, res) => {
+  const { title, description, url, status } = req.body;
 
-    if (!tilte)
-        return res.status(400).json({ success: false, message: "Title is required" });
+  if (!title)
+    return res
+      .status(400)
+      .json({ success: false, message: "Title is required" });
 
-    try {
+  try {
+    const newCourse = Course({
+      title,
+      description,
+      url: url.startsWith("https://") ? url : `https://${url} `,
+      status: status || "TO LEARN",
+      user: req.userId,
+    });
+    await newCourse.save();
 
-        const newCourse = Course({
-            tilte,
-            description,
-            url: url.startsWith("https://") ? url : `https://${url} `,
-            status: status || "TO LEARN",
-            user: req.userId,
-        });
-        await newCourse.save();
-
-        res.json({ success: true, message: "Add course successfully", course: newCourse });
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ success: false, message: "Internal server error" });
-    }
+    res.json({
+      success: true,
+      message: "Add course successfully",
+      course: newCourse,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 });
 
 // @route PUT api/courses
 // @desc Update course
 // @access private
-router.put('/:id', verifyToken, async (req, res) => {
-    
-    const { tilte, description, url, status } = req.body;
+router.put("/:id", verifyToken, async (req, res) => {
+  const { title, description, url, status } = req.body;
 
-    try {
-        let updatedCourse = {
-            tilte,
-            description,
-            url: (url.startsWith('https://') ? url : `https://${url}`) || '',
-            status: status || 'TO LEARN'
-        }
+  try {
+    let updatedCourse = {
+      title,
+      description,
+      url: (url.startsWith("https://") ? url : `https://${url}`) || "",
+      status: status || "TO LEARN",
+    };
 
-        const courseUpdateCondition = { _id: req.params.id, user: req.userId };
+    const courseUpdateCondition = { _id: req.params.id, user: req.userId };
 
-        updatedCourse = await Course.findOneAndUpdate(courseUpdateCondition, updatedCourse, {new: true});
+    updatedCourse = await Course.findOneAndUpdate(
+      courseUpdateCondition,
+      updatedCourse,
+      { new: true }
+    );
 
-        // User not authorised to update course or course not found
-        if (!updatedCourse)
-            return res.status(401).json({ success: false, message: "Course not found or user not authorised" });
+    // User not authorised to update course or course not found
+    if (!updatedCourse)
+      return res.status(401).json({
+        success: false,
+        message: "Course not found or user not authorised",
+      });
 
-        res.json({ success: true, message: "Update course successfully", course: updatedCourse });
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ success: false, message: "Internal server error" });
-    }
-
+    res.json({
+      success: true,
+      message: "Update course successfully",
+      course: updatedCourse,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 });
 
 // @route DELETE api/courses
 // @desc Delete course
 // @access private
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
+  try {
+    const courseDeleteCondition = { _id: req.params.id, user: req.userId };
+    const deletedCourse = await Course.findByIdAndDelete(courseDeleteCondition);
 
-    try {
+    // User not authorised to delete or course not found
+    if (!deletedCourse)
+      return res.status(401).json({
+        success: false,
+        message: "Course not found or user not authorised",
+      });
 
-        const courseDeleteCondition = { _id: req.params.id, user: req.userId };
-        const deletedCourse = await Course.findByIdAndDelete(courseDeleteCondition);
-
-        
-        // User not authorised to delete or course not found
-        if (!deletedCourse) 
-            return res.status(401).json({ success: false, message: "Course not found or user not authorised" });
-
-        res.json({ success: true, message: "Delete course successfully", course: deletedCourse });
-
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ success: false, message: "Internal server error" });
-    }
-
+    res.json({
+      success: true,
+      message: "Delete course successfully",
+      course: deletedCourse,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 });
 
 module.exports = router;

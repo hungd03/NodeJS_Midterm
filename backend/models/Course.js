@@ -1,25 +1,28 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const CourseSchema = new Schema ({
-    tilte: {
-        type: String,
-        required: true
+const CourseSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
     },
     description: {
-        type: String,
+      type: String,
     },
     url: {
-        type: String,
+      type: String,
     },
     status: {
-        type: String,
-        enum: ['TO LEARN', 'LEARNING', 'LEARNED'],
+      type: String,
+      enum: ["TO LEARN", "LEARNING", "LEARNED"],
     },
     user: {
-        type: Schema.Types.ObjectId,
-        ref: 'users'
-    }
-}, {timestamps: true});
+      type: Schema.Types.ObjectId,
+      ref: "users",
+    },
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('courses', CourseSchema);
+module.exports = mongoose.model("courses", CourseSchema);
