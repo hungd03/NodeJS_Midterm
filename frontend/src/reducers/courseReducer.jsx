@@ -2,6 +2,7 @@ import {
   COURSES_LOADED_SUCCESS,
   COURSES_LOADED_FAIL,
   ADD_NEW_COURSE,
+  DELETE_COURSE,
 } from "../contexts/constants";
 export const courseReducer = (state, action) => {
   const { type, payload } = action;
@@ -22,6 +23,11 @@ export const courseReducer = (state, action) => {
       return {
         ...state,
         courses: [...state.courses, payload],
+      };
+    case DELETE_COURSE:
+      return {
+        ...state,
+        courses: state.courses.filter((course) => course._id !== payload),
       };
     default:
       return state;

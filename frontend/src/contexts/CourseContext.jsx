@@ -5,6 +5,7 @@ import {
   COURSES_LOADED_SUCCESS,
   COURSES_LOADED_FAIL,
   ADD_NEW_COURSE,
+  DELETE_COURSE,
 } from "./constants";
 import axios from "axios";
 
@@ -53,11 +54,23 @@ const CourseContextProvider = ({ children }) => {
     }
   };
 
+  // Detete Course
+  const deleteCourse = async (courseId) => {
+    try {
+      const response = await axios.delete(`${apiUrl}/courses/${courseId}`);
+      if (response.data.success)
+        dispatch({ type: DELETE_COURSE, payload: courseId });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Course Context data
   const courseContextData = {
     courseState,
     getCourses,
     addCourse,
+    deleteCourse,
     showAddCourseModal,
     setShowAddCourseModal,
     showToast,
