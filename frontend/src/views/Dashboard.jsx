@@ -11,6 +11,7 @@ import Tooltip from "react-bootstrap/Tooltip";
 import Toast from "react-bootstrap/Toast";
 import SingleCourse from "../components/courses/SingleCourse";
 import AddCourseModal from "../components/courses/AddCourseModal";
+import UpdateCourseModal from "../components/courses/UpdateCourseModal";
 import addIcon from "../assets/plus-circle-fill.svg";
 
 const Dashboard = () => {
@@ -22,7 +23,7 @@ const Dashboard = () => {
   } = useContext(AuthContext);
 
   const {
-    courseState: { courses, coursesLoading },
+    courseState: { course, courses, coursesLoading },
     getCourses,
     setShowAddCourseModal,
     showToast: { show, message, type },
@@ -93,7 +94,7 @@ const Dashboard = () => {
     <>
       {body}
       <AddCourseModal />
-
+      {course !== null && <UpdateCourseModal />}
       {/* Show toast when added course successfully */}
       <Toast
         show={show}

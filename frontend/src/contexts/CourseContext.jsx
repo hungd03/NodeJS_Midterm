@@ -6,6 +6,8 @@ import {
   COURSES_LOADED_FAIL,
   ADD_NEW_COURSE,
   DELETE_COURSE,
+  UPDATE_COURSE,
+  FIND_COURSE,
 } from "./constants";
 import axios from "axios";
 
@@ -14,11 +16,13 @@ export const CourseContext = createContext();
 const CourseContextProvider = ({ children }) => {
   // State
   const [courseState, dispatch] = useReducer(courseReducer, {
+    course: null,
     courses: [],
     coursesLoading: true,
   });
 
   const [showAddCourseModal, setShowAddCourseModal] = useState(false);
+  const [showUpdateCourseModal, setShowUpdateCourseModal] = useState(false);
   const [showToast, setShowToast] = useState({
     show: false,
     message: "",
@@ -54,6 +58,32 @@ const CourseContextProvider = ({ children }) => {
     }
   };
 
+  // Find Course when using update function
+  const findCourse = (courseId) => {
+    const course = courseState.courses.find(
+      (course) => course._id === courseId
+    );
+    dispatch({ type: FIND_COURSE, payload: course });
+  };
+
+  // Update Course
+  const updateCourse = async (updatedCourse) => {
+    try {
+      const response = await axios.put(
+        `${apiUrl}/courses/${updatedCourse._id}`,
+        updatedCourse
+      );
+      if (response.data.success) {
+        dispatch({ type: UPDATE_COURSE, payload: response.data.course });
+        return response.data;
+      }
+    } catch (error) {
+      return error.response.data
+        ? error.response.data
+        : { success: false, message: "Internal server error" };
+    }
+  };
+
   // Detete Course
   const deleteCourse = async (courseId) => {
     try {
@@ -70,9 +100,13 @@ const CourseContextProvider = ({ children }) => {
     courseState,
     getCourses,
     addCourse,
+    findCourse,
+    updateCourse,
     deleteCourse,
     showAddCourseModal,
     setShowAddCourseModal,
+    showUpdateCourseModal,
+    setShowUpdateCourseModal,
     showToast,
     setShowToast,
   };
