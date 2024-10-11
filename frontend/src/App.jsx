@@ -5,6 +5,7 @@ import Auth from "./views/Auth";
 import AuthContextProvider from "./contexts/AuthContext";
 import Dashboard from "./views/Dashboard";
 import About from "./views/About";
+import NotFoundPage from "./views/NotFoundPage";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
 import CourseContextProvider from "./contexts/CourseContext";
 
@@ -27,6 +28,7 @@ function App() {
             <Route path="/about" element={<ProtectedRoute />}>
               <Route path="" element={<About />} />
             </Route>
+            <Route path="*" element={<NotFoundPage />}></Route>
           </Routes>
         </Router>
       </CourseContextProvider>
