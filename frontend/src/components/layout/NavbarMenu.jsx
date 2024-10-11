@@ -8,7 +8,12 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { useContext } from "react";
 
 const NavbarMenu = () => {
-  const { logoutUser } = useContext(AuthContext);
+  const {
+    authState: {
+      user: { username },
+    },
+    logoutUser,
+  } = useContext(AuthContext);
 
   const logout = async () => await logoutUser();
 
@@ -32,6 +37,9 @@ const NavbarMenu = () => {
         </Nav>
 
         <Nav>
+          <Nav.Link className="fw-bold text-white" disabled>
+            Welcome {username}
+          </Nav.Link>
           <Button variant="secondary" className="fw-bold text-white me-3">
             <img
               src={logoutIcon}
