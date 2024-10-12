@@ -49,7 +49,7 @@ const Dashboard = () => {
         <Card className="text-center mx-5 my-5">
           <Card.Header as="h1">Hi {username}</Card.Header>
           <Card.Body>
-            <Card.Title>Welcome to LearnIt</Card.Title>
+            <Card.Title>Welcome to Courses</Card.Title>
             <Card.Text>
               Click the button below to track your first skill to learn
             </Card.Text>
@@ -57,7 +57,7 @@ const Dashboard = () => {
               variant="primary"
               onClick={setShowAddCourseModal.bind(this, true)}
             >
-              LearnIt
+              New Skill
             </Button>
           </Card.Body>
         </Card>

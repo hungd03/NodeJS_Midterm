@@ -68,7 +68,7 @@ const AddCourseModal = () => {
           <Form.Group className="mb-3">
             <Form.Control
               type="text"
-              placeholder="Youtube Tutorial URL"
+              placeholder="URL"
               name="url"
               value={url}
               onChange={onChangeNewCourseForm}

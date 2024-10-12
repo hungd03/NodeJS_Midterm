@@ -40,7 +40,7 @@ const UpdateCourseModal = () => {
   };
 
   return (
-    <Modal show={showUpdateCourseModal}>
+    <Modal show={showUpdateCourseModal} onHide={closeDialog}>
       <Modal.Header closeButton>
         <Modal.Title>Making proress?</Modal.Title>
       </Modal.Header>
@@ -73,15 +73,14 @@ const UpdateCourseModal = () => {
           <Form.Group className="mb-3">
             <Form.Control
               type="text"
-              placeholder="Youtube Tutorial URL"
+              placeholder="URL"
               name="url"
               value={url}
               onChange={onChangeUpdatedCourseForm}
             />
           </Form.Group>
           <Form.Group>
-            <Form.Control
-              as="select"
+            <Form.Select
               value={status}
               name="status"
               onChange={onChangeUpdatedCourseForm}
@@ -89,7 +88,7 @@ const UpdateCourseModal = () => {
               <option value="TO LEARN">TO LEARN</option>
               <option value="LEARNING">LEARNING</option>
               <option value="LEARNED">LEARNED</option>
-            </Form.Control>
+            </Form.Select>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
