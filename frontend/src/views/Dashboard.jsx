@@ -98,7 +98,7 @@ const Dashboard = () => {
       {/* Show toast when added course successfully */}
       <Toast
         show={show}
-        style={{ position: "fixed", top: "20%", right: "10px", width: "13%" }}
+        style={{ position: "fixed", top: "10%", right: "0px", width: "13%" }}
         className={`bg-${type} text-white`}
         onClose={setShowToast.bind(this, {
           show: false,
