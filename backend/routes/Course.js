@@ -34,7 +34,7 @@ router.post("/", verifyToken, async (req, res) => {
     const newCourse = Course({
       title,
       description,
-      url: url.startsWith("https://") ? url : `https://${url} `,
+      url: url ? (url.startsWith("https://") ? url : `https://${url}`) : "",
       status: status || "TO LEARN",
       user: req.userId,
     });
