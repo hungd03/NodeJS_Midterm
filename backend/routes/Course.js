@@ -1,4 +1,5 @@
 const express = require("express");
+const os = require("os");
 const router = express.Router();
 const verifyToken = require("../middlewares/Auth");
 
@@ -12,7 +13,8 @@ router.get("/", verifyToken, async (req, res) => {
     const courses = await Course.find({ user: req.userId }).populate("user", [
       "username",
     ]);
-    res.json({ success: true, courses });
+    //res.json({ success: true, courses });
+    res.json({ success: true, courses, hostname: `${os.hostname()}` });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ success: false, message: "Internal server error" });
