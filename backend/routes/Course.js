@@ -2,19 +2,37 @@ const express = require("express");
 const os = require("os");
 const router = express.Router();
 const verifyToken = require("../middlewares/Auth");
+const cacheMiddleware = require("../middlewares/Cache");
+const redisClient = require("../redisClient");
+const invalidateCourseCache = require("../utils/cacheUtils");
 
 const Course = require("../models/Course");
 
 // @route GET api/courses
 // @desc Get courses
 // @access private
-router.get("/", verifyToken, async (req, res) => {
+router.get("/", verifyToken, cacheMiddleware, async (req, res) => {
   try {
     const courses = await Course.find({ user: req.userId }).populate("user", [
       "username",
     ]);
-    //res.json({ success: true, courses });
-    res.json({ success: true, courses, hostname: `${os.hostname()}` });
+
+    // Save the response in Redis with serverId from process.env.HOSTNAME
+    const cacheData = JSON.stringify({
+      success: true,
+      courses,
+      serverId: process.env.HOSTNAME, // Always use the current server's ID
+    });
+
+    await redisClient.set(
+      `user:${req.userId}:${req.method}:${req.originalUrl}`,
+      cacheData,
+      {
+        EX: 3600, // Expire the cache after 1 hour
+      }
+    );
+
+    res.json(JSON.parse(cacheData));
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ success: false, message: "Internal server error" });
@@ -42,10 +60,14 @@ router.post("/", verifyToken, async (req, res) => {
     });
     await newCourse.save();
 
+    // Invalidate the cached list of courses
+    await invalidateCourseCache(req.userId);
+
     res.json({
       success: true,
       message: "Add course successfully",
       course: newCourse,
+      hostname: `${os.hostname()}`,
     });
   } catch (error) {
     console.log(error.message);
@@ -53,7 +75,7 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
-// @route PUT api/courses
+// @route PUT api/courses/:id
 // @desc Update course
 // @access private
 router.put("/:id", verifyToken, async (req, res) => {
@@ -75,17 +97,21 @@ router.put("/:id", verifyToken, async (req, res) => {
       { new: true }
     );
 
-    // User not authorised to update course or course not found
+    // User not authorized to update course or course not found
     if (!updatedCourse)
       return res.status(401).json({
         success: false,
-        message: "Course not found or user not authorised",
+        message: "Course not found or user not authorized",
       });
+
+    // Invalidate the cached list of courses
+    await invalidateCourseCache(req.userId);
 
     res.json({
       success: true,
       message: "Update course successfully",
       course: updatedCourse,
+      serverId: process.env.HOSTNAME,
     });
   } catch (error) {
     console.log(error.message);
@@ -93,7 +119,7 @@ router.put("/:id", verifyToken, async (req, res) => {
   }
 });
 
-// @route DELETE api/courses
+// @route DELETE api/courses/:id
 // @desc Delete course
 // @access private
 router.delete("/:id", verifyToken, async (req, res) => {
@@ -101,17 +127,21 @@ router.delete("/:id", verifyToken, async (req, res) => {
     const courseDeleteCondition = { _id: req.params.id, user: req.userId };
     const deletedCourse = await Course.findByIdAndDelete(courseDeleteCondition);
 
-    // User not authorised to delete or course not found
+    // User not authorized to delete or course not found
     if (!deletedCourse)
       return res.status(401).json({
         success: false,
-        message: "Course not found or user not authorised",
+        message: "Course not found or user not authorized",
       });
+
+    // Invalidate the cached list of courses
+    await invalidateCourseCache(req.userId);
 
     res.json({
       success: true,
       message: "Delete course successfully",
       course: deletedCourse,
+      serverId: process.env.HOSTNAME,
     });
   } catch (error) {
     console.log(error.message);
