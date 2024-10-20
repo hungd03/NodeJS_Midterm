@@ -18,7 +18,6 @@ const AuthContextProvider = ({ children }) => {
     if (localStorage[LOCAL_STORAGE_TOKEN_NAME]) {
       setAuthToken(localStorage[LOCAL_STORAGE_TOKEN_NAME]);
     }
-
     try {
       const response = await axios.get(`${apiUrl}/auth`);
       if (response.data.success) {
@@ -39,6 +38,7 @@ const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     loadUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Login

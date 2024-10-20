@@ -50,7 +50,6 @@ const LoginForm = () => {
             name="username"
             value={username}
             onChange={onChangeLoginForm}
-            required
           />
         </Form.Group>
         <Form.Group>
@@ -62,7 +61,6 @@ const LoginForm = () => {
             name="password"
             value={password}
             onChange={onChangeLoginForm}
-            required
           />
         </Form.Group>
         <AlertMessage info={alert} />

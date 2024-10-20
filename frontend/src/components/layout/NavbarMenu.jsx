@@ -15,7 +15,7 @@ const NavbarMenu = () => {
     logoutUser,
   } = useContext(AuthContext);
 
-  const logout = async () => await logoutUser();
+  const logout = () => logoutUser();
 
   return (
     <Navbar expand="lg" bg="primary" variant="dark" className="shadow">

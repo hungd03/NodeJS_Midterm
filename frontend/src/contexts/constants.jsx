@@ -1,5 +1,7 @@
 export const apiUrl =
-  process.env.NODE_ENV !== "production" ? "http://localhost:8080/api" : "";
+  process.env.NODE_ENV !== "production"
+    ? "http://localhost/api" // Trong môi trường phát triển, API sẽ gửi đến backend trực tiếp
+    : "/api";
 
 export const LOCAL_STORAGE_TOKEN_NAME = "token";
 
